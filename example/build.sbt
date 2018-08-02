@@ -15,3 +15,4 @@ commonSourcePackages += "common"
 
 courseId := "bRPXgjY9EeW6RApRXdjJPw"
 
+libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.6" % "test"

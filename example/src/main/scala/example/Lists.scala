@@ -41,6 +41,6 @@ object Lists {
     def max(xs: List[Int]): Int = xs match {
       case Nil => throw new NoSuchElementException("empty list")
       case head :: Nil => head
-      case head :: tail => head max max(xs.tail)
+      case head :: tail => head max max(tail)
     }
   }

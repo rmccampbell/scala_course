@@ -74,9 +74,12 @@ class FunSetSuite extends FunSuite {
    */
 
   trait TestSets {
-    val s1 = singletonSet(1)
-    val s2 = singletonSet(2)
-    val s3 = singletonSet(3)
+    val s1: Set = singletonSet(1)
+    val s2: Set = singletonSet(2)
+    val s3: Set = singletonSet(3)
+    val s12: Set = x => x == 1 || x == 2
+    val s23: Set = x => x == 2 || x == 3
+    val s_empty: Set = x => false
   }
 
   /**
@@ -111,4 +114,85 @@ class FunSetSuite extends FunSuite {
   }
 
 
+  test("intersect same set") {
+    new TestSets {
+      val s = intersect(s1, s1)
+      assert(contains(s, 1))
+      assert(!contains(s, 2))
+    }
+  }
+
+  test("intersect overlapping sets") {
+    new TestSets {
+      val s = intersect(s12, s23)
+      assert(!contains(s, 1))
+      assert(contains(s, 2))
+      assert(!contains(s, 3))
+    }
+  }
+
+  test("intersect disjoint sets") {
+    new TestSets {
+      val s = intersect(s1, s2)
+      assert(!contains(s, 1))
+      assert(!contains(s, 2))
+    }
+  }
+
+  test("diff set and itself") {
+    new TestSets {
+      val s = diff(s1, s1)
+      assert(!contains(s, 1))
+      assert(!contains(s, 2))
+    }
+  }
+
+  test("diff overlapping sets") {
+    new TestSets {
+      val s = diff(s12, s23)
+      assert(contains(s, 1))
+      assert(!contains(s, 2))
+      assert(!contains(s, 3))
+    }
+  }
+
+  test("filter") {
+    new TestSets {
+      assert(contains(filter(s1, x => x == 1), 1))
+      assert(!contains(filter(s1, x => x != 1), 1))
+    }
+  }
+
+  test("forall positive") {
+    new TestSets {
+      assert(forall(s12, x => x == 1 || x == 2))
+    }
+  }
+
+  test("forall negative") {
+    new TestSets {
+      assert(!forall(s12, x => x == 1))
+    }
+  }
+
+  test("exists positive") {
+    new TestSets {
+      assert(exists(s12, x => x == 1))
+    }
+  }
+
+  test("exists negative") {
+    new TestSets {
+      assert(!exists(s12, x => x == 3))
+    }
+  }
+
+  test("map") {
+    new TestSets {
+      val s = map(s1, x => 2*x)
+      assert(!contains(s, 1))
+      assert(contains(s, 2))
+      assert(!contains(s, 3))
+    }
+  }
 }
